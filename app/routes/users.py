@@ -25,15 +25,21 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     return {"message": "User registered"}
 
 # LOGIN
-@router.post("/login", response_model=Token)
-def login(user: UserLogin, db: Session = Depends(get_db)):
-    db_user = db.query(User).filter(User.email == user.email).first()
+@router.post("/login")
+def login_user(user: schemas.UserLogin, db: Session = Depends(get_db)):
+    db_user = db.query(models.User).filter(
+        models.User.email == user.email
+    ).first()
 
     if not db_user:
-        raise HTTPException(status_code=400, detail="Invalid email or password")
+        raise HTTPException(status_code=401, detail="Invalid email or password")
 
     if not verify_password(user.password, db_user.password):
-        raise HTTPException(status_code=400, detail="Invalid email or password")
+        raise HTTPException(status_code=401, detail="Invalid email or password")
 
-    token = create_access_token({"sub": db_user.email})
-    return {"access_token": token, "token_type": "bearer"}
+    access_token = create_access_token({"sub": db_user.email})
+
+    return {
+        "access_token": access_token,
+        "token_type": "bearer"
+    }
