@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.user import User
+from app import models, schemas
 from app.auth import hash_password, verify_password, create_access_token
 from app.schemas import UserCreate, UserLogin, Token
 
