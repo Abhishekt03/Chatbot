@@ -6,6 +6,8 @@ from app.auth import hash_password, verify_password, create_access_token
 from app.database import SessionLocal
 from app import models, schemas
 from app.auth import hash_password
+from app.database import get_db
+
 
 router = APIRouter(prefix="/users", tags=["Users"])
 

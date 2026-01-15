@@ -13,5 +13,13 @@ SessionLocal = sessionmaker(
     autoflush=False,
     bind=engine
 )
+# ✅ ADD THIS FUNCTION
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 
 Base = declarative_base()
