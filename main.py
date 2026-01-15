@@ -10,7 +10,7 @@ app = FastAPI(title="Chatbot Platform")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://chatabhi.netlify.app"],
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
