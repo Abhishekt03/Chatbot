@@ -16,7 +16,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://abhishekchatbot.netlify.app",  # 👈 YOUR FRONTEND
+        "https://chatabhi.netlify.app",  # 👈 YOUR FRONTEND
         "http://localhost:5500"
     ],
     allow_credentials=True,
