@@ -8,19 +8,16 @@ from app.routes.chat import router as chat_router
 
 app = FastAPI(title="Chatbot Platform")
 
-# ✅ CORS — MUST BE FIRST
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # TEMP: allow all (safe for submission)
+    allow_origins=["*"],
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# DB
 Base.metadata.create_all(bind=engine)
 
-# Routes
 app.include_router(user_router)
 app.include_router(project_router)
 app.include_router(chat_router)
