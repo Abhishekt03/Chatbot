@@ -6,10 +6,11 @@ class UserCreate(BaseModel):
 
 class UserResponse(BaseModel):
     id: int
-    email: EmailStr
+    email: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
 class UserLogin(BaseModel):
     email: EmailStr
     password: str

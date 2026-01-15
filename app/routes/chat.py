@@ -1,8 +1,12 @@
 import os
 import requests
 from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 from pydantic import BaseModel
+
 from app.auth import get_current_user
+from app.database import get_db
+from app.models.chat import ChatMessage
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 
@@ -12,11 +16,21 @@ class ChatRequest(BaseModel):
     project_id: int
     message: str
 
-@router.post("/")
-def chat(req: ChatRequest, user=Depends(get_current_user)):
 
-    if not OPENROUTER_API_KEY:
-        return {"error": "OPENROUTER_API_KEY not set"}
+@router.post("/")
+def chat(
+    req: ChatRequest,
+    user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    # Save user message
+    db.add(ChatMessage(
+        project_id=req.project_id,
+        user_id=user.id,
+        role="user",
+        content=req.message
+    ))
+    db.commit()
 
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
@@ -38,8 +52,15 @@ def chat(req: ChatRequest, user=Depends(get_current_user)):
         json=payload
     )
 
-    data = response.json()
+    reply = response.json()["choices"][0]["message"]["content"]
 
-    return {
-        "reply": data["choices"][0]["message"]["content"]
-    }
+    # Save assistant reply
+    db.add(ChatMessage(
+        project_id=req.project_id,
+        user_id=user.id,
+        role="assistant",
+        content=reply
+    ))
+    db.commit()
+
+    return {"reply": reply}
