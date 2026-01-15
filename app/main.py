@@ -6,20 +6,13 @@ from app.routes.users import router as user_router
 from app.routes.projects import router as project_router
 from app.routes.chat import router as chat_router
 
-app = FastAPI(
-    title="Chatbot Platform",
-    docs_url="/docs",
-    redoc_url=None
-)
+app = FastAPI(title="Chatbot Platform")
 
-# ✅ CORS MUST BE HERE (TOP)
+# ✅ CORS — MUST BE FIRST
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://chatabhi.netlify.app",  # 👈 YOUR FRONTEND
-        "http://localhost:5500"
-    ],
-    allow_credentials=True,
+    allow_origins=["*"],   # TEMP: allow all (safe for submission)
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
